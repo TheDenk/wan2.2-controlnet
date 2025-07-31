@@ -1,5 +1,8 @@
 # Controlnet for Wan2.2
 
+https://github.com/user-attachments/assets/f54fca00-ec27-454a-aec7-ca082e251aea
+
+
 This repo contains the code for controlnet module for Wan2.2.  
 Same approach as controlnet for [Wan2.1](https://github.com/TheDenk/wan2.1-dilated-controlnet).
 
