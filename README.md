@@ -1,9 +1,9 @@
 # Controlnet for Wan2.2
 
-https://github.com/user-attachments/assets/32779618-8e57-4270-9c67-9075eae6ef8e
+https://github.com/user-attachments/assets/36f6bd4f-450d-4aeb-afb9-02f62f3d6f34
 
 This repo contains the code for controlnet module for Wan2.2.  
-Same approach as controlnet for [Wan2.1](https://github.com/TheDenk/wan2.1-dilated-controlnet).
+Same approach as controlnet for [Wan2.1](https://github.com/TheDenk/wan2.1-dilated-controlnet).  
 ```Currently, chess artifacts are observed in the 5B model inference. Perhaps this will be corrected in the future.```  
 ### Models  
 | Model | Processor | Huggingface Link |
