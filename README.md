@@ -13,6 +13,8 @@ Use the cool [ComfyUI-WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideo
 | Model | Processor | Huggingface Link |
 |-------|:-----------:|:------------------:|
 | TI2V-5B  | Depth     | [Link](https://huggingface.co/TheDenk/wan2.2-ti2v-5b-controlnet-depth-v1)             |
+| TI2V-5B  | Canny     | [Link](https://huggingface.co/TheDenk/wan2.2-ti2v-5b-controlnet-canny-v1)             |
+| TI2V-5B  | Hed     | [Link](https://huggingface.co/TheDenk/wan2.2-ti2v-5b-controlnet-hed-v1)             |
 
 ### How to
 Clone repo 
@@ -65,6 +67,70 @@ python -m inference.cli_demo \
     --out_fps 24 \
     --output_path "result.mp4" \
     --teacache_treshold 0.6
+```
+
+#### Minimal code example
+```python
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
+import torch
+from diffusers.utils import load_video, export_to_video
+from diffusers import AutoencoderKLWan, UniPCMultistepScheduler
+from controlnet_aux import MidasDetector
+
+from wan_controlnet import WanControlnet
+from wan_transformer import CustomWanTransformer3DModel
+from wan_t2v_controlnet_pipeline import WanTextToVideoControlnetPipeline
+
+base_model_path = "Wan-AI/Wan2.2-TI2V-5B-Diffusers"
+controlnet_model_path = "TheDenk/wan2.2-ti2v-5b-controlnet-depth-v1"
+vae = AutoencoderKLWan.from_pretrained(base_model_path, subfolder="vae", torch_dtype=torch.float32)
+transformer = CustomWanTransformer3DModel.from_pretrained(base_model_path, subfolder="transformer", torch_dtype=torch.bfloat16)
+controlnet = WanControlnet.from_pretrained(controlnet_model_path, torch_dtype=torch.bfloat16)
+pipe = WanTextToVideoControlnetPipeline.from_pretrained(
+    pretrained_model_name_or_path=base_model_path,
+    controlnet=controlnet,
+    transformer=transformer,
+    vae=vae, 
+    torch_dtype=torch.bfloat16
+)
+pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config, flow_shift=5.0)
+pipe.enable_model_cpu_offload()
+
+controlnet_processor = MidasDetector.from_pretrained('lllyasviel/Annotators')
+img_h = 704 # 704 480
+img_w = 1280 # 1280 832
+num_frames = 121  # 121 81 49
+
+video_path = 'bubble.mp4'
+video_frames = load_video(video_path)[:num_frames]
+video_frames = [x.resize((img_w, img_h)) for x in video_frames]
+controlnet_frames = [controlnet_processor(x) for x in video_frames]
+
+prompt = "Close-up shot with soft lighting, focusing sharply on the lower half of a young woman's face. Her lips are slightly parted as she blows an enormous bubblegum bubble. The bubble is semi-transparent, shimmering gently under the light, and surprisingly contains a miniature aquarium inside, where two orange-and-white goldfish slowly swim, their fins delicately fluttering as if in an aquatic universe. The background is a pure light blue color."
+negative_prompt = "bad quality, worst quality"
+
+output = pipe(
+    prompt=prompt,
+    negative_prompt=negative_prompt,
+    height=img_h,
+    width=img_w,
+    num_frames=num_frames,
+    guidance_scale=5,
+    generator=torch.Generator(device="cuda").manual_seed(42),
+    output_type="pil",
+
+    controlnet_frames=controlnet_frames,
+    controlnet_guidance_start=0.0,
+    controlnet_guidance_end=0.8,
+    controlnet_weight=0.8,
+
+    teacache_treshold=0.6,
+).frames[0]
+
+export_to_video(output, "output.mp4", fps=16)
 ```
 
 
