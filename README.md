@@ -8,8 +8,12 @@ Same approach as controlnet for [Wan2.1](https://github.com/TheDenk/wan2.1-dilat
 
 ### For ComfyUI
 Use the cool [ComfyUI-WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper).  
-<img width="600" height="480" alt="t2i_workflow" src="https://github.com/user-attachments/assets/4788c2d0-8ff0-405e-9b6d-0e0b1347865b" />
-
+<img width="600" height="480" alt="t2i_workflow" src="https://github.com/user-attachments/assets/4788c2d0-8ff0-405e-9b6d-0e0b1347865b" />  
+The latest version of the `diffusers` is required.  
+You can install it like this:  
+```bash
+pip install git+https://github.com/huggingface/diffusers.git
+```
 ### Models  
 | Model | Processor | Huggingface Link |
 |-------|:-----------:|:------------------:|
