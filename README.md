@@ -8,6 +8,7 @@ Same approach as controlnet for [Wan2.1](https://github.com/TheDenk/wan2.1-dilat
 
 ### For ComfyUI
 Use the cool [ComfyUI-WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper).  
+<img width="600" height="480" alt="t2i_workflow" src="https://github.com/user-attachments/assets/4788c2d0-8ff0-405e-9b6d-0e0b1347865b" />
 
 ### Models  
 | Model | Processor | Huggingface Link |
@@ -15,6 +16,8 @@ Use the cool [ComfyUI-WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideo
 | TI2V-5B  | Depth     | [Link](https://huggingface.co/TheDenk/wan2.2-ti2v-5b-controlnet-depth-v1)             |
 | TI2V-5B  | Canny     | [Link](https://huggingface.co/TheDenk/wan2.2-ti2v-5b-controlnet-canny-v1)             |
 | TI2V-5B  | Hed     | [Link](https://huggingface.co/TheDenk/wan2.2-ti2v-5b-controlnet-hed-v1)             |
+| T2V-A14B  | Depth     | [Link](https://huggingface.co/TheDenk/wan2.2-t2v-a14b-controlnet-depth-v1)             |
+| T2V-A14B  | Hed     | [Link](https://huggingface.co/TheDenk/wan2.2-t2v-a14b-controlnet-hed-v1)             |
 
 ### How to
 Clone repo 
