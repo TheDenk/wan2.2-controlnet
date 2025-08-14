@@ -17,6 +17,7 @@ pip install git+https://github.com/huggingface/diffusers.git
 ### Models  
 | Model | Processor | Huggingface Link |
 |-------|:-----------:|:------------------:|
+| TI2V-5B  | Tile     | [Link](https://huggingface.co/TheDenk/wan2.2-ti2v-5b-controlnet-tile-v1)             |
 | TI2V-5B  | Depth     | [Link](https://huggingface.co/TheDenk/wan2.2-ti2v-5b-controlnet-depth-v1)             |
 | TI2V-5B  | Canny     | [Link](https://huggingface.co/TheDenk/wan2.2-ti2v-5b-controlnet-canny-v1)             |
 | TI2V-5B  | Hed     | [Link](https://huggingface.co/TheDenk/wan2.2-ti2v-5b-controlnet-hed-v1)             |
