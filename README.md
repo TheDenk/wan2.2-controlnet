@@ -76,6 +76,25 @@ python -m inference.cli_demo \
     --teacache_treshold 0.6
 ```
 
+#### For tile controlnet do processing like this
+```python
+import cv2
+from PIL import Image
+
+def apply_gaussian_blur(image, ksize=5, sigmaX=1.0):
+    image_np = np.array(image)
+    if ksize % 2 == 0:
+        ksize += 1
+    blurred_image = cv2.GaussianBlur(image_np, (ksize, ksize), sigmaX=sigmaX)
+    return Image.fromarray(blurred_image)
+
+ksize = 5
+downscale_coef = 4
+controlnet_frames = [x.resize((img_w // downscale_coef, img_h // downscale_coef)) for x in video_frames]
+controlnet_frames = [apply_gaussian_blur(x, ksize=ksize, sigmaX=ksize // 2) for x in controlnet_frames]
+controlnet_frames = [x.resize((img_w, img_h)) for x in controlnet_frames]
+```
+
 #### Minimal code example
 ```python
 import os

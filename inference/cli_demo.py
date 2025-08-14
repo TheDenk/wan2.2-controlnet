@@ -21,7 +21,11 @@ import sys
 sys.path.append('..')
 import argparse
 
+import cv2
 import torch
+import numpy as np
+from PIL import Image
+
 from transformers import UMT5EncoderModel, T5TokenizerFast
 from diffusers import (
     AutoencoderKLWan,
@@ -36,8 +40,22 @@ from wan_transformer import CustomWanTransformer3DModel
 from wan_t2v_controlnet_pipeline import WanTextToVideoControlnetPipeline
 
 
+
+def apply_gaussian_blur(image, ksize=5, sigmaX=1.0):
+    image_np = np.array(image)
+    if ksize % 2 == 0:
+        ksize += 1
+    blurred_image = cv2.GaussianBlur(image_np, (ksize, ksize), sigmaX=sigmaX)
+    return Image.fromarray(blurred_image)
+
+class TilePreprocessor:
+    def __call__(self, image, target_h, target_w, ksize=5, downscale_coef=4):
+        img = image.resize((target_w // downscale_coef, target_h // downscale_coef))
+        img = apply_gaussian_blur(img, ksize=ksize, sigmaX=ksize // 2)
+        return img.resize((target_w, target_h))
+
 def init_controlnet_processor(controlnet_type):
-    if controlnet_type in ['canny']:
+    if controlnet_type in ['canny', 'tile']:
         return controlnet_mapping[controlnet_type]()
     return controlnet_mapping[controlnet_type].from_pretrained('lllyasviel/Annotators').to(device='cuda')
 
@@ -46,6 +64,7 @@ controlnet_mapping = {
     'canny': CannyDetector,
     'hed': HEDdetector,
     'depth': MidasDetector,
+    'tile': TilePreprocessor
 }
 
 @torch.no_grad()
@@ -123,7 +142,10 @@ def generate_video(
 
     video = load_video(video_path)[:num_frames]
     video = [x.resize((video_width, video_height)) for x in video]
-    controlnet_frames = [controlnet_processor(x) for x in video]
+    if controlnet_type in ["tile"]:
+        controlnet_frames = [controlnet_processor(x, video_height, video_width, ksize=5, downscale_coef=4) for x in video]
+    else:
+        controlnet_frames = [controlnet_processor(x) for x in video]
 
     # If you're using with lora, add this code
     if lora_path:
