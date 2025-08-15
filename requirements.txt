@@ -4,3 +4,5 @@ opencv-python
 Pillow
 torch
 transformers
+imageio-ffmpeg
+peft
