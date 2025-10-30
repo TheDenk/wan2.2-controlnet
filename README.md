@@ -168,7 +168,7 @@ Original code and models [Wan2.2](https://github.com/Wan-Video/Wan2.2).
 ## Citations
 ```
 @misc{TheDenk,
-    title={Wam2.2 Controlnet},
+    title={Wan2.2 Controlnet},
     author={Karachev Denis},
     url={https://github.com/TheDenk/wan2.2-controlnet},
     publisher={Github},
